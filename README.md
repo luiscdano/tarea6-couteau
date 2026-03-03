@@ -33,15 +33,92 @@ El icono esta configurado con foto personal usando `flutter_launcher_icons` desd
 - `just_audio`
 - `flutter_launcher_icons` (dev)
 
-## Ejecutar el proyecto
+## Prerrequisitos
+
+- Flutter SDK instalado (`flutter --version`).
+- Android Studio instalado.
+- Android SDK + Android Emulator configurados.
+- Licencias aceptadas:
+
+```bash
+flutter doctor --android-licenses
+```
+
+## Ejecutar en emulador Android (paso a paso)
+
+1. Entrar al proyecto:
+
+```bash
+cd "/Users/luiscdano/Desktop/ITLA/four-month period/2026-C1/TDS-011 Introducción al Desarrollo de Aplicaciones Móviles/Tarea 6 - Couteau"
+```
+
+2. Descargar dependencias:
 
 ```bash
 flutter pub get
-flutter pub run flutter_launcher_icons
-flutter run
 ```
 
-## Validacion ejecutada
+3. (Opcional, si cambias la foto del icono) regenerar iconos:
+
+```bash
+flutter pub run flutter_launcher_icons
+```
+
+4. Ver emuladores disponibles:
+
+```bash
+flutter emulators
+```
+
+5. Iniciar un emulador Android (ejemplo del proyecto):
+
+```bash
+flutter emulators --launch Pixel_7
+```
+
+6. Confirmar que el emulador aparezca conectado:
+
+```bash
+flutter devices
+```
+
+Debe aparecer algo como `emulator-5554`.
+
+7. Ejecutar la app en Android:
+
+```bash
+flutter run -d emulator-5554
+```
+
+Tambien puedes usar el id exacto que te salga en `flutter devices`.
+
+## Como revisar visualmente la tarea
+
+Cuando la app abra en el emulador, usa las pestañas superiores:
+
+- `Caja`
+- `Genero`
+- `Edad`
+- `Universidades`
+- `Clima RD`
+- `Pokemon`
+- `WordPress`
+- `Acerca de`
+
+Asi validas los 8 requerimientos de forma visual.
+
+## Troubleshooting rapido
+
+Si `flutter devices` no muestra el emulador:
+
+```bash
+flutter emulators --launch Pixel_7
+flutter devices --device-timeout 20
+```
+
+Si aun no aparece, abrir Android Studio y arrancar el AVD desde **Device Manager**.
+
+## Validacion ejecutada en este proyecto
 
 ```bash
 flutter analyze
