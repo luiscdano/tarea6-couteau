@@ -37,6 +37,12 @@ Importante: este QR apunta exactamente a la misma URL colocada en "URL del APK".
 
 ![QR APK](assets/qr/qr_apk.png)
 
+### QR del Release
+
+Escanear para abrir la pagina del release en GitHub.
+
+![QR Release](assets/qr/qr_release.png)
+
 ## Como Ejecutar la App (Breve)
 
 1. Clonar el repositorio:
@@ -89,4 +95,3 @@ APK resultante:
 
 - Configurado con foto personal en:
   - `assets/images/profile_photo.jpg`
-
