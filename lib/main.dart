@@ -7,13 +7,13 @@ import 'package:just_audio/just_audio.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 const String _toolboxImage1Path = 'assets/images/cajaherramientas01.png';
-const String _toolboxImage2Path = 'assets/images/cajaherramientas02.png';
 const String _maleImagePath = 'assets/images/azul.png';
 const String _femaleImagePath = 'assets/images/rosa.png';
-const String _pokemonModuleImagePath = 'assets/images/pokebolas.png';
-const String _youngImagePath = 'assets/images/edad_joven.png';
-const String _adultImagePath = 'assets/images/edad_adulto.png';
-const String _elderImagePath = 'assets/images/edad_anciano.png';
+const String _pokemonModuleImagePath = 'assets/images/pokebola.png';
+const String _ageModuleImagePath = 'assets/images/edad.png';
+const String _universitiesModuleImagePath = 'assets/images/univ.png';
+const String _weatherModuleImagePath = 'assets/images/clima.png';
+const String _wordpressModuleImagePath = 'assets/images/wordpress.png';
 const String _aboutImagePath = 'assets/images/me.png';
 
 const String _genderApi = 'https://api.genderize.io/';
@@ -22,10 +22,7 @@ const String _universitiesApi = 'https://adamix.net/proxy.php';
 const String _weatherApi =
     'https://api.open-meteo.com/v1/forecast?latitude=18.4861&longitude=-69.9312&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&timezone=America%2FSanto_Domingo';
 const String _pokemonApi = 'https://pokeapi.co/api/v2/pokemon/';
-const String _wordpressApi =
-    'https://wordpress.org/news/wp-json/wp/v2/posts?per_page=3';
-const String _wordpressLogoUrl =
-    'https://s.w.org/style/images/about/WordPress-logotype-standard.png';
+const String _wordpressApi = 'https://wordpress.org/news/wp-json/wp/v2/posts';
 
 void main() {
   runApp(const CouteauApp());
@@ -52,44 +49,145 @@ class CouteauApp extends StatelessWidget {
   }
 }
 
-class MainNavigationScreen extends StatelessWidget {
+class MainNavigationScreen extends StatefulWidget {
   const MainNavigationScreen({super.key});
 
   @override
+  State<MainNavigationScreen> createState() => _MainNavigationScreenState();
+}
+
+class _MainNavigationScreenState extends State<MainNavigationScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  int _selectedIndex = 0;
+
+  static const List<String> _menuTitles = [
+    'Home',
+    'Genero',
+    'Edad',
+    'Universidades',
+    'Clima RD',
+    'Pokemon',
+    'WordPress',
+    'Contactame',
+  ];
+
+  static const List<IconData> _menuIcons = [
+    Icons.home,
+    Icons.wc,
+    Icons.cake,
+    Icons.school,
+    Icons.cloud,
+    Icons.catching_pokemon,
+    Icons.newspaper,
+    Icons.person,
+  ];
+
+  static const List<Widget> _screens = [
+    ToolboxScreen(),
+    GenderScreen(),
+    AgeScreen(),
+    UniversitiesScreen(),
+    WeatherScreen(),
+    PokemonScreen(),
+    WordpressScreen(),
+    AboutScreen(),
+  ];
+
+  void _selectScreen(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    Navigator.of(context).pop();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 8,
-      child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: const Text('Tarea 6 - Couteau'),
-          bottom: const TabBar(
-            isScrollable: true,
-            tabs: [
-              Tab(icon: Icon(Icons.home_repair_service), text: 'Caja'),
-              Tab(icon: Icon(Icons.wc), text: 'Genero'),
-              Tab(icon: Icon(Icons.cake), text: 'Edad'),
-              Tab(icon: Icon(Icons.school), text: 'Universidades'),
-              Tab(icon: Icon(Icons.cloud), text: 'Clima RD'),
-              Tab(icon: Icon(Icons.catching_pokemon), text: 'Pokemon'),
-              Tab(icon: Icon(Icons.newspaper), text: 'WordPress'),
-              Tab(icon: Icon(Icons.person), text: 'Acerca de'),
+    final appBarTitleStyle =
+        Theme.of(context).appBarTheme.titleTextStyle ??
+        Theme.of(context).textTheme.titleLarge;
+    final appBarTextColor =
+        appBarTitleStyle?.color ??
+        Theme.of(context).appBarTheme.foregroundColor ??
+        Theme.of(context).colorScheme.onSurface;
+    final appBarIconSize = ((appBarTitleStyle?.fontSize ?? 20) + 8).toDouble();
+
+    return Scaffold(
+      key: _scaffoldKey,
+      appBar: AppBar(
+        centerTitle: true,
+        actionsPadding: const EdgeInsets.only(right: 28),
+        leading: IconButton(
+          iconSize: appBarIconSize,
+          icon: Icon(Icons.menu, size: appBarIconSize),
+          onPressed: () => _scaffoldKey.currentState?.openDrawer(),
+          tooltip: 'Menu',
+        ),
+        title: TextButton(
+          style: TextButton.styleFrom(
+            foregroundColor: appBarTextColor,
+            textStyle: appBarTitleStyle,
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+          ),
+          onPressed: () {
+            setState(() {
+              _selectedIndex = 0;
+            });
+          },
+          child: const Text('Home'),
+        ),
+        actions: [
+          TextButton(
+            style: TextButton.styleFrom(
+              foregroundColor: appBarTextColor,
+              textStyle: appBarTitleStyle,
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+            ),
+            onPressed: () {
+              setState(() {
+                _selectedIndex = 7;
+              });
+            },
+            child: const Text('Contactame'),
+          ),
+        ],
+      ),
+      drawer: Drawer(
+        child: SafeArea(
+          child: Column(
+            children: [
+              const SizedBox(height: 8),
+              const Text(
+                'Modulos',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: _menuTitles.length,
+                  itemBuilder: (context, index) {
+                    final selected = _selectedIndex == index;
+                    return ListTile(
+                      leading: Icon(_menuIcons[index]),
+                      title: Text(
+                        _menuTitles[index],
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontWeight: selected
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                        ),
+                      ),
+                      selected: selected,
+                      onTap: () => _selectScreen(index),
+                    );
+                  },
+                ),
+              ),
             ],
           ),
         ),
-        body: const TabBarView(
-          children: [
-            ToolboxScreen(),
-            GenderScreen(),
-            AgeScreen(),
-            UniversitiesScreen(),
-            WeatherScreen(),
-            PokemonScreen(),
-            WordpressScreen(),
-            AboutScreen(),
-          ],
-        ),
       ),
+      body: IndexedStack(index: _selectedIndex, children: _screens),
     );
   }
 }
@@ -105,26 +203,49 @@ class ToolboxScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              '1) Caja de herramientas',
-              style: Theme.of(
-                context,
-              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+            Center(
+              child: Text(
+                'Home - Caja de Herramientas',
+                textAlign: TextAlign.center,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              ),
             ),
-            const SizedBox(height: 8),
-            Text(
-              'La app funciona como una caja de herramientas para diferentes servicios.',
-              style: Theme.of(context).textTheme.bodyLarge,
+            const SizedBox(height: 28),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: const Color(0xFFD5DCE6)),
+              ),
+              child: Image.asset(
+                _toolboxImage1Path,
+                width: double.infinity,
+                height: 300,
+                fit: BoxFit.contain,
+              ),
             ),
-            const SizedBox(height: 16),
-            _AssetImageCard(
-              title: 'Caja de herramientas 01',
-              imagePath: _toolboxImage1Path,
-            ),
-            const SizedBox(height: 14),
-            _AssetImageCard(
-              title: 'Caja de herramientas 02',
-              imagePath: _toolboxImage2Path,
+            const SizedBox(height: 28),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(18),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: const Color(0xFFD5DCE6)),
+              ),
+              child: Text(
+                'Bienvenido a la Caja de Herramientas. Esta aplicacion reune '
+                'diferentes utilidades en un solo lugar: prediccion de genero, '
+                'estimacion de edad, consulta de universidades, clima en '
+                'Republica Dominicana, datos de Pokemon, noticias desde '
+                'WordPress y un apartado "Acerca de" con mi informacion de '
+                'contacto. Selecciona un modulo para comenzar.',
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
             ),
           ],
         ),
@@ -226,18 +347,42 @@ class _GenderScreenState extends State<GenderScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              '2) Prediccion de genero',
-              style: Theme.of(
-                context,
-              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+            Center(
+              child: Text(
+                'Prediccion de Genero',
+                textAlign: TextAlign.center,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              ),
             ),
-            const SizedBox(height: 8),
-            Text(
-              'API: $_genderApi?name=irma',
-              style: Theme.of(context).textTheme.bodyMedium,
+            const SizedBox(height: 18),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(18),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: const Color(0xFFD5DCE6)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Este modulo permite estimar el genero de una persona a '
+                    'partir de su nombre utilizando una API externa. La '
+                    'aplicacion analiza el nombre ingresado y muestra el '
+                    'resultado mediante un indicador visual.',
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                  const SizedBox(height: 12),
+                  const Text('• Bandera azul: Masculino'),
+                  const SizedBox(height: 6),
+                  const Text('• Bandera rosa: Femenino'),
+                ],
+              ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 22),
             Row(
               children: [
                 Expanded(
@@ -259,50 +404,56 @@ class _GenderScreenState extends State<GenderScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 14),
+            const SizedBox(height: 18),
             if (_isLoading) const LinearProgressIndicator(),
             if (_error != null) ...[
               const SizedBox(height: 12),
               Text(_error!, style: const TextStyle(color: Colors.red)),
             ],
             if (result != null) ...[
-              const SizedBox(height: 16),
+              const SizedBox(height: 22),
               Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: color,
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(14),
                   border: Border.all(color: borderColor, width: 1.5),
                 ),
-                padding: const EdgeInsets.all(14),
+                padding: const EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Nombre: ${result.name}',
+                      'Nombre analizado: ${result.name}',
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),
                     ),
-                    const SizedBox(height: 6),
+                    const SizedBox(height: 10),
                     Text(
                       isMale
-                          ? 'Genero predicho: Masculino (azul)'
-                          : 'Genero predicho: Femenino (rosa)',
+                          ? 'Genero detectado: Masculino'
+                          : 'Genero detectado: Femenino',
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 6),
                     Text(
                       'Probabilidad: ${(result.probability * 100).toStringAsFixed(1)}%',
                     ),
-                    const SizedBox(height: 10),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
+                    const SizedBox(height: 16),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: color,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: borderColor, width: 1.2),
+                      ),
                       child: Image.asset(
                         isMale ? _maleImagePath : _femaleImagePath,
-                        height: 180,
+                        height: 280,
                         width: double.infinity,
-                        fit: BoxFit.cover,
+                        fit: BoxFit.contain,
                       ),
                     ),
                   ],
@@ -396,6 +547,7 @@ class _AgeScreenState extends State<AgeScreen> {
   Widget build(BuildContext context) {
     final result = _result;
     final stage = _stageFor(result?.age);
+    final category = _labelFor(stage);
 
     return SafeArea(
       child: SingleChildScrollView(
@@ -403,18 +555,50 @@ class _AgeScreenState extends State<AgeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              '3) Prediccion de edad',
-              style: Theme.of(
-                context,
-              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+            Center(
+              child: Text(
+                'Prediccion de Edad',
+                textAlign: TextAlign.center,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              ),
             ),
-            const SizedBox(height: 8),
-            Text(
-              'API: $_ageApi?name=meelad',
-              style: Theme.of(context).textTheme.bodyMedium,
+            const SizedBox(height: 18),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(18),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: const Color(0xFFD5DCE6)),
+              ),
+              child: Text(
+                'Este modulo permite estimar la edad probable de una persona '
+                'a partir de su nombre utilizando una API externa. Segun la '
+                'edad estimada, la aplicacion clasifica el resultado en tres '
+                'categorias: Joven, Adulto o Anciano, mostrando la etapa '
+                'correspondiente de forma clara en la pantalla.',
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 22),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: const Color(0xFFD5DCE6)),
+              ),
+              child: Image.asset(
+                _ageModuleImagePath,
+                width: double.infinity,
+                height: 340,
+                fit: BoxFit.contain,
+              ),
+            ),
+            const SizedBox(height: 22),
             Row(
               children: [
                 Expanded(
@@ -436,44 +620,34 @@ class _AgeScreenState extends State<AgeScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 14),
+            const SizedBox(height: 18),
             if (_isLoading) const LinearProgressIndicator(),
             if (_error != null) ...[
               const SizedBox(height: 12),
               Text(_error!, style: const TextStyle(color: Colors.red)),
             ],
             if (result != null) ...[
-              const SizedBox(height: 16),
+              const SizedBox(height: 24),
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(14),
+                padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: const Color(0xFFD5DCE6)),
+                  border: Border.all(
+                    color: Theme.of(context).colorScheme.primary,
+                    width: 1.5,
+                  ),
                 ),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Nombre: ${result.name}',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    Text('Edad estimada: ${result.age} anos'),
-                    const SizedBox(height: 4),
-                    Text('Clasificacion: ${_labelFor(stage)}'),
-                    const SizedBox(height: 10),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Image.asset(
-                        _imageFor(stage),
-                        height: 170,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
+                      category,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 38,
+                        fontWeight: FontWeight.w800,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
                   ],
@@ -579,23 +753,57 @@ class _UniversitiesScreenState extends State<UniversitiesScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Padding(
+      child: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              '4) Universidades por pais',
-              style: Theme.of(
-                context,
-              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+            Center(
+              child: Text(
+                'Universidades por Pais',
+                textAlign: TextAlign.center,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              ),
             ),
-            const SizedBox(height: 8),
-            Text(
-              'API: $_universitiesApi?country=Dominican+Republic',
-              style: Theme.of(context).textTheme.bodyMedium,
+            const SizedBox(height: 18),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(18),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: const Color(0xFFD5DCE6)),
+              ),
+              child: Text(
+                'Este modulo permite consultar las universidades de un pais '
+                'ingresando su nombre en ingles. La aplicacion utiliza una '
+                'API externa para obtener la informacion y mostrar una lista '
+                'de universidades registradas en ese pais.\n\n'
+                'Para cada universidad se mostrara su nombre, dominio y enlace '
+                'a su pagina web oficial, permitiendo al usuario acceder '
+                'directamente a mas informacion.',
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 20),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: const Color(0xFFD5DCE6)),
+              ),
+              child: Image.asset(
+                _universitiesModuleImagePath,
+                width: double.infinity,
+                height: 280,
+                fit: BoxFit.contain,
+              ),
+            ),
+            const SizedBox(height: 20),
             Row(
               children: [
                 Expanded(
@@ -604,7 +812,7 @@ class _UniversitiesScreenState extends State<UniversitiesScreen> {
                     textInputAction: TextInputAction.search,
                     onSubmitted: (_) => _fetchUniversities(),
                     decoration: const InputDecoration(
-                      labelText: 'Pais en ingles',
+                      labelText: 'Pais (en ingles)',
                       border: OutlineInputBorder(),
                     ),
                   ),
@@ -617,14 +825,14 @@ class _UniversitiesScreenState extends State<UniversitiesScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 14),
             if (_isLoading) const LinearProgressIndicator(),
             if (_error != null) ...[
               const SizedBox(height: 12),
               Text(_error!, style: const TextStyle(color: Colors.red)),
             ],
-            const SizedBox(height: 10),
-            Expanded(child: _buildUniversitiesBody(context)),
+            const SizedBox(height: 14),
+            _buildUniversitiesBody(context),
           ],
         ),
       ),
@@ -641,6 +849,8 @@ class _UniversitiesScreenState extends State<UniversitiesScreen> {
     }
 
     return ListView.separated(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       itemCount: _universities.length,
       separatorBuilder: (context, index) => const SizedBox(height: 10),
       itemBuilder: (context, index) {
@@ -659,7 +869,7 @@ class _UniversitiesScreenState extends State<UniversitiesScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  university.name,
+                  'Nombre de la universidad: ${university.name}',
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -669,7 +879,7 @@ class _UniversitiesScreenState extends State<UniversitiesScreen> {
                 Text('Dominio: $domain'),
                 const SizedBox(height: 4),
                 Text(
-                  'Web: ${website.isEmpty ? 'N/D' : website}',
+                  'Enlace: ${website.isEmpty ? 'N/D' : website}',
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.primary,
                   ),
@@ -763,34 +973,66 @@ class _WeatherScreenState extends State<WeatherScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              '5) Clima en Republica Dominicana',
-              style: Theme.of(
-                context,
-              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+            Center(
+              child: Text(
+                'Clima en Republica Dominicana',
+                textAlign: TextAlign.center,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              ),
             ),
-            const SizedBox(height: 8),
-            Text(
-              'Fuente: Open-Meteo (Santo Domingo, RD)',
-              style: Theme.of(context).textTheme.bodyMedium,
+            const SizedBox(height: 18),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(18),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: const Color(0xFFD5DCE6)),
+              ),
+              child: Text(
+                'Este modulo permite consultar como estara el clima en '
+                'Republica Dominicana en el dia actual. La aplicacion obtiene '
+                'la informacion del clima mediante una API externa y muestra '
+                'los datos principales para que el usuario pueda conocer las '
+                'condiciones meteorologicas del momento.',
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 20),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: const Color(0xFFD5DCE6)),
+              ),
+              child: Image.asset(
+                _weatherModuleImagePath,
+                width: double.infinity,
+                height: 390,
+                fit: BoxFit.contain,
+              ),
+            ),
+            const SizedBox(height: 20),
             FilledButton.icon(
               onPressed: _isLoading ? null : _fetchWeather,
               icon: const Icon(Icons.refresh),
-              label: const Text('Actualizar clima de hoy'),
+              label: const Text('Consultar Clima'),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 14),
             if (_isLoading) const LinearProgressIndicator(),
             if (_error != null) ...[
               const SizedBox(height: 12),
               Text(_error!, style: const TextStyle(color: Colors.red)),
             ],
             if (weather != null) ...[
-              const SizedBox(height: 16),
+              const SizedBox(height: 22),
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(14),
+                padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(14),
@@ -799,6 +1041,14 @@ class _WeatherScreenState extends State<WeatherScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    const Text(
+                      'Resultado del clima de hoy',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
                     Row(
                       children: [
                         Icon(
@@ -809,7 +1059,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                         const SizedBox(width: 10),
                         Expanded(
                           child: Text(
-                            weatherDescription(weather.weatherCode),
+                            weatherSimpleCondition(weather.weatherCode),
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -823,6 +1073,10 @@ class _WeatherScreenState extends State<WeatherScreen> {
                     const SizedBox(height: 6),
                     Text(
                       'Temperatura: ${weather.temperature.toStringAsFixed(1)} C',
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Condicion: ${weatherDescription(weather.weatherCode)}',
                     ),
                     const SizedBox(height: 4),
                     Text('Humedad: ${weather.humidity}%'),
@@ -1000,28 +1254,48 @@ class _PokemonScreenState extends State<PokemonScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              '6) Pokemon',
-              style: Theme.of(
-                context,
-              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+            Center(
+              child: Text(
+                "Pokemon's",
+                textAlign: TextAlign.center,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              ),
             ),
-            const SizedBox(height: 8),
-            Text(
-              'API: ${_pokemonApi}pikachu',
-              style: Theme.of(context).textTheme.bodyMedium,
+            const SizedBox(height: 18),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(18),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: const Color(0xFFD5DCE6)),
+              ),
+              child: Text(
+                'Este modulo permite consultar informacion sobre un Pokemon '
+                'ingresando su nombre. La aplicacion utiliza una API externa '
+                'para obtener los datos del Pokemon solicitado.',
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
             ),
-            const SizedBox(height: 14),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
+            const SizedBox(height: 20),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: const Color(0xFFD5DCE6)),
+              ),
               child: Image.asset(
                 _pokemonModuleImagePath,
                 width: double.infinity,
-                height: 170,
-                fit: BoxFit.cover,
+                height: 280,
+                fit: BoxFit.contain,
               ),
             ),
-            const SizedBox(height: 14),
+            const SizedBox(height: 20),
             Row(
               children: [
                 Expanded(
@@ -1030,7 +1304,7 @@ class _PokemonScreenState extends State<PokemonScreen> {
                     textInputAction: TextInputAction.search,
                     onSubmitted: (_) => _fetchPokemon(),
                     decoration: const InputDecoration(
-                      labelText: 'Nombre del pokemon',
+                      labelText: 'Nombre del Pokemon',
                       border: OutlineInputBorder(),
                     ),
                   ),
@@ -1043,17 +1317,17 @@ class _PokemonScreenState extends State<PokemonScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 14),
             if (_isLoading) const LinearProgressIndicator(),
             if (_error != null) ...[
               const SizedBox(height: 12),
               Text(_error!, style: const TextStyle(color: Colors.red)),
             ],
             if (pokemon != null) ...[
-              const SizedBox(height: 16),
+              const SizedBox(height: 22),
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(14),
+                padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(14),
@@ -1062,47 +1336,33 @@ class _PokemonScreenState extends State<PokemonScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: 110,
-                          height: 110,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFF4F6FA),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: pokemon.imageUrl == null
-                              ? const Icon(Icons.image_not_supported)
-                              : Image.network(
-                                  pokemon.imageUrl!,
-                                  fit: BoxFit.contain,
-                                  errorBuilder: (context, error, stackTrace) =>
-                                      const Icon(Icons.image_not_supported),
-                                ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                capitalize(pokemon.name),
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const SizedBox(height: 6),
-                              Text(
-                                'Experiencia base: ${pokemon.baseExperience}',
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                    Container(
+                      width: double.infinity,
+                      height: 240,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF4F6FA),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: pokemon.imageUrl == null
+                          ? const Icon(Icons.image_not_supported)
+                          : Image.network(
+                              pokemon.imageUrl!,
+                              fit: BoxFit.contain,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  const Icon(Icons.image_not_supported),
+                            ),
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 14),
+                    Text(
+                      capitalize(pokemon.name),
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text('Experiencia base: ${pokemon.baseExperience}'),
+                    const SizedBox(height: 14),
                     const Text(
                       'Habilidades:',
                       style: TextStyle(fontWeight: FontWeight.bold),
@@ -1151,12 +1411,7 @@ class _WordpressScreenState extends State<WordpressScreen> {
   bool _isLoading = false;
   String? _error;
   List<WordpressPost> _posts = const [];
-
-  @override
-  void initState() {
-    super.initState();
-    unawaited(_fetchPosts());
-  }
+  int _nextPage = 1;
 
   Future<void> _fetchPosts() async {
     setState(() {
@@ -1165,23 +1420,20 @@ class _WordpressScreenState extends State<WordpressScreen> {
     });
 
     try {
-      final uri = Uri.parse(_wordpressApi);
-      final response = await http.get(uri).timeout(const Duration(seconds: 15));
+      var pageToLoad = _nextPage;
+      var response = await _fetchPostsResponse(pageToLoad);
+
+      // Si se llega al final del paginado, vuelve al inicio (ultimas noticias).
+      if (response.statusCode == 400 && pageToLoad > 1) {
+        pageToLoad = 1;
+        response = await _fetchPostsResponse(pageToLoad);
+      }
 
       if (response.statusCode != 200) {
         throw Exception('Error HTTP ${response.statusCode}');
       }
 
-      final json = jsonDecode(response.body);
-      if (json is! List) {
-        throw const FormatException('Formato inesperado');
-      }
-
-      final posts = json
-          .whereType<Map<String, dynamic>>()
-          .map(WordpressPost.fromJson)
-          .take(3)
-          .toList();
+      final posts = _parsePostsFromResponse(response.body);
 
       if (!mounted) {
         return;
@@ -1189,6 +1441,7 @@ class _WordpressScreenState extends State<WordpressScreen> {
 
       setState(() {
         _posts = posts;
+        _nextPage = pageToLoad + 1;
       });
     } catch (error) {
       if (!mounted) {
@@ -1208,26 +1461,44 @@ class _WordpressScreenState extends State<WordpressScreen> {
     }
   }
 
+  Future<http.Response> _fetchPostsResponse(int page) {
+    final uri = Uri.parse(
+      _wordpressApi,
+    ).replace(queryParameters: {'per_page': '3', 'page': '$page'});
+    return http.get(uri).timeout(const Duration(seconds: 15));
+  }
+
+  List<WordpressPost> _parsePostsFromResponse(String body) {
+    final json = jsonDecode(body);
+    if (json is! List) {
+      throw const FormatException('Formato inesperado');
+    }
+
+    return json
+        .whereType<Map<String, dynamic>>()
+        .map(WordpressPost.fromJson)
+        .take(3)
+        .toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Padding(
+      child: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              '7) Noticias WordPress',
-              style: Theme.of(
-                context,
-              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+            Center(
+              child: Text(
+                'Noticias desde WordPress',
+                textAlign: TextAlign.center,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              ),
             ),
-            const SizedBox(height: 8),
-            Text(
-              'API usada para el foro: $_wordpressApi',
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 18),
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(12),
@@ -1236,30 +1507,46 @@ class _WordpressScreenState extends State<WordpressScreen> {
                 borderRadius: BorderRadius.circular(14),
                 border: Border.all(color: const Color(0xFFD5DCE6)),
               ),
-              child: Image.network(
-                _wordpressLogoUrl,
-                height: 64,
+              child: Image.asset(
+                _wordpressModuleImagePath,
+                height: 280,
                 fit: BoxFit.contain,
-                errorBuilder: (context, error, stackTrace) => const SizedBox(
-                  height: 64,
-                  child: Center(child: Icon(Icons.public)),
-                ),
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 20),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(18),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: const Color(0xFFD5DCE6)),
+              ),
+              child: Text(
+                'Este modulo permite consultar las ultimas noticias publicadas '
+                'en un sitio web desarrollado con WordPress utilizando su API. '
+                'La aplicacion obtiene la informacion y muestra los tres '
+                'articulos mas recientes.\n\n'
+                'Para cada noticia se mostrara el titulo, un resumen del '
+                'contenido y un enlace para visitar la publicacion original en '
+                'la pagina web.',
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+            ),
+            const SizedBox(height: 20),
             FilledButton.icon(
               onPressed: _isLoading ? null : _fetchPosts,
-              icon: const Icon(Icons.refresh),
-              label: const Text('Actualizar 3 ultimas noticias'),
+              icon: const Icon(Icons.newspaper),
+              label: const Text('Cargar Noticias'),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 14),
             if (_isLoading) const LinearProgressIndicator(),
             if (_error != null) ...[
               const SizedBox(height: 12),
               Text(_error!, style: const TextStyle(color: Colors.red)),
             ],
-            const SizedBox(height: 8),
-            Expanded(child: _buildPostsList(context)),
+            const SizedBox(height: 14),
+            _buildPostsList(context),
           ],
         ),
       ),
@@ -1276,6 +1563,8 @@ class _WordpressScreenState extends State<WordpressScreen> {
     }
 
     return ListView.separated(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       itemCount: _posts.length,
       separatorBuilder: (context, index) => const SizedBox(height: 10),
       itemBuilder: (context, index) {
@@ -1329,20 +1618,13 @@ class AboutScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              '8) Acerca de',
-              style: Theme.of(
-                context,
-              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 12),
             Card(
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   children: [
                     const CircleAvatar(
-                      radius: 62,
+                      radius: 90,
                       backgroundImage: AssetImage(_aboutImagePath),
                     ),
                     const SizedBox(height: 12),
@@ -1409,7 +1691,9 @@ class AboutScreen extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(12),
                 child: Text(
-                  'El icono de la app esta configurado con tu foto en assets/images/profile_photo.jpg usando flutter_launcher_icons.',
+                  'Instituto Tecnologico de las Americas, Materia Desarrollo '
+                  'de aplicaciones moviles impartida por el docente Amadis '
+                  'Suarez Genao',
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
@@ -1463,41 +1747,6 @@ class ContactRow extends StatelessWidget {
               const Icon(Icons.open_in_new, size: 18),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _AssetImageCard extends StatelessWidget {
-  const _AssetImageCard({required this.title, required this.imagePath});
-
-  final String title;
-  final String imagePath;
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: Image.asset(
-                imagePath,
-                height: 210,
-                width: double.infinity,
-                fit: BoxFit.cover,
-              ),
-            ),
-          ],
         ),
       ),
     );
@@ -1740,17 +1989,6 @@ String _labelFor(AgeStage stage) {
   }
 }
 
-String _imageFor(AgeStage stage) {
-  switch (stage) {
-    case AgeStage.young:
-      return _youngImagePath;
-    case AgeStage.adult:
-      return _adultImagePath;
-    case AgeStage.elder:
-      return _elderImagePath;
-  }
-}
-
 List<String> _stringListFromDynamic(dynamic input) {
   if (input is! List) {
     return const [];
@@ -1861,6 +2099,25 @@ String weatherDescription(int code) {
   }
 
   return 'Condicion desconocida';
+}
+
+String weatherSimpleCondition(int code) {
+  if (code == 0) {
+    return 'Soleado';
+  }
+
+  if (code == 1 || code == 2 || code == 3 || code == 45 || code == 48) {
+    return 'Nublado';
+  }
+
+  if ((code >= 51 && code <= 57) ||
+      (code >= 61 && code <= 67) ||
+      (code >= 80 && code <= 82) ||
+      code >= 95) {
+    return 'Lluvioso';
+  }
+
+  return 'Variable';
 }
 
 IconData weatherIcon(int code) {
