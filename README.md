@@ -1,10 +1,6 @@
 # Tarea 6 - Couteau (Flutter)
 
-Proyecto de la materia **Introduccion al Desarrollo de Aplicaciones Moviles**.
-
-## Introduccion Personal
-
-Profesor Amadis Suarez Genao:
+## Introduccion
 
 Al desarrollar esta aplicacion en Flutter pude reforzar competencias clave del desarrollo movil: consumo de APIs reales, manejo de estados, organizacion de modulos y diseno de una interfaz clara para el usuario.
 
@@ -25,25 +21,17 @@ Como resultado final, entrego la app funcionando, su APK instalable, codigo vers
 
 ### QR del Repositorio
 
-Escanear para abrir el codigo fuente en GitHub:
-
 ![QR Repositorio](assets/qr/qr_repositorio.png)
 
 ### QR del APK
-
-Escanear para descargar el APK.
-
-Importante: este QR apunta exactamente a la misma URL colocada en "URL del APK".
 
 ![QR APK](assets/qr/qr_apk.png)
 
 ### QR del Release
 
-Escanear para abrir la pagina del release en GitHub.
-
 ![QR Release](assets/qr/qr_release.png)
 
-## Como Ejecutar la App (Breve)
+## Como Ejecutar la App
 
 1. Clonar el repositorio:
 
@@ -90,8 +78,3 @@ APK resultante:
 6. Pokemon's
 7. Noticias desde WordPress
 8. Contactame
-
-## Icono de la App
-
-- Configurado con foto personal en:
-  - `assets/images/profile_photo.jpg`
