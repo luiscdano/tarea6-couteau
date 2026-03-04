@@ -1,78 +1,49 @@
 # Tarea 6 - Couteau (Flutter)
 
-Aplicacion movil para la materia **Introduccion al Desarrollo de Aplicaciones Moviles**.
+Proyecto de la materia **Introduccion al Desarrollo de Aplicaciones Moviles**.
 
-## Requisitos cubiertos (8 modulos)
+## Introduccion Personal
 
-1. **Home - Caja de Herramientas**
-   - Imagen: `assets/images/cajaherramientas01.png`
-   - Texto de bienvenida y descripcion general de la app.
-2. **Prediccion de Genero**
-   - API: `https://api.genderize.io/?name=irma`
-   - Resultado visual:
-     - Masculino -> `assets/images/azul.png`
-     - Femenino -> `assets/images/rosa.png`
-3. **Prediccion de Edad**
-   - API: `https://api.agify.io/?name=meelad`
-   - Imagen: `assets/images/edad.png`
-   - Clasificacion mostrada en pantalla: `Joven`, `Adulto` o `Anciano`.
-4. **Universidades por Pais**
-   - API: `https://adamix.net/proxy.php?country=Dominican+Republic`
-   - Imagen: `assets/images/univ.png`
-   - Muestra nombre, dominio y enlace web de cada universidad.
-5. **Clima en Republica Dominicana**
-   - API (Open-Meteo): consulta del clima actual de Santo Domingo.
-   - Imagen: `assets/images/clima.png`
-   - Muestra temperatura, condicion, humedad y viento.
-6. **Pokemon's**
-   - API: `https://pokeapi.co/api/v2/pokemon/pikachu`
-   - Imagen del modulo: `assets/images/pokebola.png`
-   - Muestra foto del pokemon, experiencia base, habilidades y reproduce sonido (`cries.latest`).
-7. **Noticias desde WordPress**
-   - Imagen: `assets/images/wordpress.png`
-   - API usada para el foro: `https://wordpress.org/news/wp-json/wp/v2/posts?per_page=3`
-   - Muestra 3 noticias con titulo, resumen y enlace `Visitar`.
-   - Cada clic en `Cargar Noticias` avanza a otra pagina de posts; al final vuelve a la pagina 1.
-8. **Contactame**
-   - Imagen: `assets/images/me.png`
-   - Datos de contacto y texto institucional.
+Profesor Amadis Suarez Genao:
 
-## Icono de la app
+Al desarrollar esta aplicacion en Flutter pude reforzar competencias clave del desarrollo movil: consumo de APIs reales, manejo de estados, organizacion de modulos y diseno de una interfaz clara para el usuario.
 
-El icono esta configurado con foto personal usando `flutter_launcher_icons`:
+Cada seccion represento un reto distinto. Trabaje la prediccion de genero y edad, consulta de universidades por pais, clima de Republica Dominicana, datos de Pokemon, noticias de WordPress y una vista de contacto personal. Este proceso me permitio consolidar conocimientos tecnicos y enfocarme en una experiencia de uso limpia y funcional.
 
-- `assets/images/profile_photo.jpg`
+Como resultado final, entrego la app funcionando, su APK instalable, codigo versionado en GitHub y esta documentacion con enlaces y codigos QR para acceso rapido.
 
-Si cambias la imagen, regenera iconos con:
+## Enlaces Oficiales de Entrega
+
+- **URL del codigo (repositorio):**
+  - `https://github.com/luiscdano/tarea6-couteau`
+- **URL del APK (descarga directa):**
+  - `https://github.com/luiscdano/tarea6-couteau/releases/download/v1.0.0-couteau/app-release.apk`
+- **URL del Release (referencia):**
+  - `https://github.com/luiscdano/tarea6-couteau/releases/tag/v1.0.0-couteau`
+
+## Codigos QR
+
+### QR del Repositorio
+
+Escanear para abrir el codigo fuente en GitHub:
+
+![QR Repositorio](assets/qr/qr_repositorio.png)
+
+### QR del APK
+
+Escanear para descargar el APK.
+
+Importante: este QR apunta exactamente a la misma URL colocada en "URL del APK".
+
+![QR APK](assets/qr/qr_apk.png)
+
+## Como Ejecutar la App (Breve)
+
+1. Clonar el repositorio:
 
 ```bash
-flutter pub run flutter_launcher_icons
-```
-
-## Dependencias principales
-
-- `http`
-- `url_launcher`
-- `just_audio`
-- `flutter_launcher_icons` (dev)
-
-## Prerrequisitos
-
-- Flutter SDK instalado
-- Android Studio + Android SDK
-- Emulador Android configurado
-- Licencias Android aceptadas:
-
-```bash
-flutter doctor --android-licenses
-```
-
-## Ejecutar en simulador Android
-
-1. Entrar al proyecto:
-
-```bash
-cd "/Users/luiscdano/Desktop/ITLA/four-month period/2026-C1/TDS-011 Introducción al Desarrollo de Aplicaciones Móviles/Tarea 6 - Couteau"
+git clone https://github.com/luiscdano/tarea6-couteau.git
+cd tarea6-couteau
 ```
 
 2. Instalar dependencias:
@@ -81,56 +52,41 @@ cd "/Users/luiscdano/Desktop/ITLA/four-month period/2026-C1/TDS-011 Introduccio�
 flutter pub get
 ```
 
-3. Ver emuladores disponibles:
-
-```bash
-flutter emulators
-```
-
-4. Iniciar uno (ejemplo):
-
-```bash
-flutter emulators --launch Pixel_7
-```
-
-5. Confirmar dispositivo:
+3. Iniciar un emulador Android o conectar un dispositivo:
 
 ```bash
 flutter devices
 ```
 
-6. Ejecutar la app:
+4. Ejecutar la app:
 
 ```bash
-flutter run -d emulator-5554
+flutter run
 ```
 
-Usa el ID real que te salga en `flutter devices`.
-
-## Navegacion de la app
-
-- Barra superior:
-  - Izquierda: icono menu (abre el drawer con todos los modulos)
-  - Centro: `Home`
-  - Derecha: `Contactame`
-- Drawer: acceso a los 8 modulos.
-
-## Validacion tecnica
-
-Comandos recomendados:
+5. Para generar APK release localmente:
 
 ```bash
-flutter analyze
-flutter test
+flutter build apk --release
 ```
 
-## Troubleshooting rapido
+APK resultante:
 
-Si no aparece el emulador en `flutter devices`:
+- `build/app/outputs/flutter-apk/app-release.apk`
 
-```bash
-flutter emulators --launch Pixel_7
-flutter devices --device-timeout 20
-```
+## Modulos Implementados
 
-Si aun falla, abre Android Studio y levanta el AVD desde **Device Manager**.
+1. Home - Caja de Herramientas
+2. Prediccion de Genero
+3. Prediccion de Edad
+4. Universidades por Pais
+5. Clima en Republica Dominicana
+6. Pokemon's
+7. Noticias desde WordPress
+8. Contactame
+
+## Icono de la App
+
+- Configurado con foto personal en:
+  - `assets/images/profile_photo.jpg`
+
